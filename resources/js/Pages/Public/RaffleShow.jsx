@@ -1,9 +1,18 @@
 // resources/js/Pages/Public/RaffleShow.jsx
 import React from 'react';
 import { Link, Head } from '@inertiajs/react';
-import { FiCalendar, FiClock, FiGift, FiTag, FiArrowRight, FiUsers, FiCheck } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiGift, FiTag, FiArrowRight, FiUsers, FiCheck, FiUser } from 'react-icons/fi';
 
-export default function PublicRaffleShow({ raffle, cooperative, prizes, entryCount, isEnded, isDrawn }) {
+export default function PublicRaffleShow({
+                                             raffle,
+                                             cooperative,
+                                             prizes,
+                                             entryCount,
+                                             isEnded,
+                                             isDrawn,
+                                             // Optional: add any new props that might be relevant
+                                             anonymousEntryAllowed = false // New prop to indicate if anonymous entries are supported
+                                         }) {
     return (
         <>
             <Head title={raffle.title} />
@@ -107,7 +116,19 @@ export default function PublicRaffleShow({ raffle, cooperative, prizes, entryCou
                                 </div>
                             )}
 
-                            {/* Raffle status banner */}
+                            {/* Additional note about anonymous entries if allowed */}
+                            {anonymousEntryAllowed && (
+                                <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-md p-4 mb-4">
+                                    <div className="flex items-center">
+                                        <FiUser className="h-5 w-5 text-blue-600 dark:text-blue-300 mr-2" />
+                                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                                            Anonymous entries are allowed for this raffle
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Existing raffle status banners */}
                             {isDrawn ? (
                                 <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-md p-4 mb-8">
                                     <div className="flex">

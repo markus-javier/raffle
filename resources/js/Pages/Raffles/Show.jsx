@@ -246,7 +246,7 @@ export default function RaffleShow({ raffle, prizes, stats }) {
                                                         {entry.ticket_number}
                                                     </td>
                                                     <td className="px-4 py-2 whitespace-nowrap">
-                                                        {entry.participant.name}
+                                                        {entry.entrant_name}
                                                     </td>
                                                     <td className="px-4 py-2 whitespace-nowrap">
                                                         {new Date(entry.created_at).toLocaleDateString()}

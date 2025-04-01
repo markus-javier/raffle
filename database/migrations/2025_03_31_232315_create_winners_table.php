@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('raffle_id')->constrained()->onDelete('cascade');
             $table->foreignId('prize_id')->constrained()->onDelete('cascade');
             $table->foreignId('raffle_entry_id')->constrained()->onDelete('cascade');
-            $table->foreignId('participant_id')->constrained()->onDelete('cascade');
+            $table->foreignId('participant_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('drawn_at');
             $table->boolean('is_claimed')->default(false);
             $table->timestamp('claimed_at')->nullable();

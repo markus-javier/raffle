@@ -23,7 +23,7 @@ export default function ParticipantsIndex({ participants, importErrors }) {
 
     const handleDelete = () => {
         if (!selectedParticipant) return;
-        window.location.href = route('participants.destroy', selectedParticipant.id);
+        window.location.href = route('participants.destroy', selectedparticipant?.id);
     };
 
     const closeModal = () => {
@@ -34,15 +34,15 @@ export default function ParticipantsIndex({ participants, importErrors }) {
     const filterParticipants = (participant) => {
         // Filter by search text
         const matchesSearch = search === '' ||
-            participant.name.toLowerCase().includes(search.toLowerCase()) ||
-            participant.email.toLowerCase().includes(search.toLowerCase()) ||
-            (participant.member_id && participant.member_id.toLowerCase().includes(search.toLowerCase()));
+            participant?.name.toLowerCase().includes(search.toLowerCase()) ||
+            participant?.email.toLowerCase().includes(search.toLowerCase()) ||
+            (participant?.member_id && participant?.member_id.toLowerCase().includes(search.toLowerCase()));
 
         // Filter by active/inactive status
         const matchesActiveFilter =
             filterActive === 'all' ||
-            (filterActive === 'active' && participant.active) ||
-            (filterActive === 'inactive' && !participant.active);
+            (filterActive === 'active' && participant?.active) ||
+            (filterActive === 'inactive' && !participant?.active);
 
         return matchesSearch && matchesActiveFilter;
     };
@@ -153,23 +153,23 @@ export default function ParticipantsIndex({ participants, importErrors }) {
                             </thead>
                             <tbody className="bg-white dark:bg-dark-paper divide-y divide-gray-200 dark:divide-gray-700">
                             {filteredParticipants.map((participant) => (
-                                <tr key={participant.id}>
+                                <tr key={participant?.id}>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{participant.name}</div>
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{participant?.name}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">{participant.email}</div>
-                                        {participant.phone && (
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">{participant.phone}</div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400">{participant?.email}</div>
+                                        {participant?.phone && (
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{participant?.phone}</div>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            {participant.member_id || "-"}
+                                            {participant?.member_id || "-"}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        {participant.active ? (
+                                        {participant?.active ? (
                                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
                           Active
                         </span>
@@ -181,13 +181,13 @@ export default function ParticipantsIndex({ participants, importErrors }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <Link
-                                            href={route('participants.show', participant.id)}
+                                            href={route('participants.show', participant?.id)}
                                             className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3"
                                         >
                                             <FiEye className="inline h-4 w-4 mr-1" /> View
                                         </Link>
                                         <Link
-                                            href={route('participants.edit', participant.id)}
+                                            href={route('participants.edit', participant?.id)}
                                             className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3"
                                         >
                                             <FiEdit className="inline h-4 w-4 mr-1" /> Edit
@@ -245,7 +245,7 @@ export default function ParticipantsIndex({ participants, importErrors }) {
                                 Confirm Deletion
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Are you sure you want to delete {selectedParticipant.name}? This action cannot be undone.
+                                Are you sure you want to delete {selectedparticipant?.name}? This action cannot be undone.
                             </p>
                             <div className="flex justify-end space-x-3">
                                 <button

@@ -38,7 +38,7 @@ export default function RaffleEntries({ raffle, entries, importErrors }) {
         const header = "Ticket Number,Name,Email,Phone,Member ID,Date\n";
 
         const rows = entries.data.map(entry => {
-            return `${entry.ticket_number},${entry.participant.name},${entry.participant.email},${entry.participant.phone || ''},${entry.participant.member_id || ''},${new Date(entry.created_at).toLocaleDateString()}\n`;
+            return `${entry.ticket_number},${entry.participant?.name},${entry.participant?.email},${entry.participant?.phone || ''},${entry.participant?.member_id || ''},${new Date(entry.created_at).toLocaleDateString()}\n`;
         }).join('');
 
         const blob = new Blob([header, rows], { type: 'text/csv' });
@@ -116,6 +116,7 @@ export default function RaffleEntries({ raffle, entries, importErrors }) {
                             <thead className="bg-gray-50 dark:bg-dark-light">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ticket #</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Entry Name</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Participant</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
@@ -130,15 +131,18 @@ export default function RaffleEntries({ raffle, entries, importErrors }) {
                                         <div className="text-sm font-mono text-gray-900 dark:text-white">{entry.ticket_number}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{entry.participant.name}</div>
-                                        {entry.participant.member_id && (
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">ID: {entry.participant.member_id}</div>
+                                        <div className="text-sm font-mono text-gray-900 dark:text-white">{entry.entrant_name}</div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{entry.participant?.name}</div>
+                                        {entry.participant?.member_id && (
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">ID: {entry.participant?.member_id}</div>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">{entry.participant.email}</div>
-                                        {entry.participant.phone && (
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">{entry.participant.phone}</div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400">{entry.participant?.email}</div>
+                                        {entry.participant?.phone && (
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{entry.participant?.phone}</div>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
@@ -231,7 +235,7 @@ export default function RaffleEntries({ raffle, entries, importErrors }) {
                                 <div className="text-sm text-gray-500 dark:text-gray-400">Ticket Number:</div>
                                 <div className="font-medium text-gray-900 dark:text-white">{selectedEntry.ticket_number}</div>
                                 <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">Participant:</div>
-                                <div className="font-medium text-gray-900 dark:text-white">{selectedEntry.participant.name}</div>
+                                <div className="font-medium text-gray-900 dark:text-white">{selectedEntry.entrant_name}</div>
                             </div>
                             <div className="flex justify-end space-x-3">
                                 <button

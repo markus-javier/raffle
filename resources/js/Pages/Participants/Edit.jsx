@@ -11,22 +11,22 @@ export default function ParticipantEdit({ participant, cooperative }) {
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
 
     const { data, setData, put, processing, errors } = useForm({
-        name: participant.name || '',
-        email: participant.email || '',
-        phone: participant.phone || '',
-        member_id: participant.member_id || '',
-        additional_info: participant.additional_info ? JSON.stringify(participant.additional_info) : '{}',
-        active: participant.active,
+        name: participant?.name || '',
+        email: participant?.email || '',
+        phone: participant?.phone || '',
+        member_id: participant?.member_id || '',
+        additional_info: participant?.additional_info ? JSON.stringify(participant?.additional_info) : '{}',
+        active: participant?.active,
         _method: 'PUT',
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('participants.update', participant.id));
+        put(route('participants.update', participant?.id));
     };
 
     const handleDelete = () => {
-        window.location.href = route('participants.destroy', participant.id);
+        window.location.href = route('participants.destroy', participant?.id);
     };
 
     return (
@@ -126,7 +126,7 @@ export default function ParticipantEdit({ participant, cooperative }) {
                                 Confirm Deletion
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Are you sure you want to delete {participant.name}? This action cannot be undone.
+                                Are you sure you want to delete {participant?.name}? This action cannot be undone.
                             </p>
                             <div className="flex justify-end space-x-3">
                                 <button

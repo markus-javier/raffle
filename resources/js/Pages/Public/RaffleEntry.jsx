@@ -63,7 +63,7 @@ export default function RaffleWinners({ raffle, winners }) {
                             <div className="text-center mb-4">
                                 <span className="text-sm text-gray-500 dark:text-gray-400">Winner:</span>
                                 <div className="font-bold text-gray-900 dark:text-white mt-1">
-                                    {winner.participant.name}
+                                    {winner.participant?.name}
                                 </div>
                                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                     Ticket: {winner.raffle_entry.ticket_number}
@@ -109,7 +109,7 @@ export default function RaffleWinners({ raffle, winners }) {
                                 Mark Prize as Claimed
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Are you sure you want to mark this prize as claimed by {selectedWinner.participant.name}?
+                                Are you sure you want to mark this prize as claimed by {selectedWinner.participant?.name}?
                             </p>
                             <div className="bg-gray-50 dark:bg-dark-light p-3 rounded-md mb-4">
                                 <div className="text-sm text-gray-500 dark:text-gray-400">Prize:</div>

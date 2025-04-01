@@ -20,7 +20,7 @@ export default function ParticipantShow({ participant }) {
                     },
                     {
                         label: 'Edit',
-                        href: route('participants.edit', participant.id),
+                        href: route('participants.edit', participant?.id),
                         icon: <FiEdit />,
                     },
                 ]}
@@ -30,37 +30,37 @@ export default function ParticipantShow({ participant }) {
                 <Card>
                     <div className="mb-6">
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                            {participant.name}
+                            {participant?.name}
                         </h2>
 
                         <div className="flex flex-wrap mt-4">
                             <div className="flex items-center mr-6 mb-2">
                                 <FiMail className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                                <span className="text-gray-600 dark:text-gray-300">{participant.email}</span>
+                                <span className="text-gray-600 dark:text-gray-300">{participant?.email}</span>
                             </div>
 
-                            {participant.phone && (
+                            {participant?.phone && (
                                 <div className="flex items-center mr-6 mb-2">
                                     <FiPhone className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                                    <span className="text-gray-600 dark:text-gray-300">{participant.phone}</span>
+                                    <span className="text-gray-600 dark:text-gray-300">{participant?.phone}</span>
                                 </div>
                             )}
 
-                            {participant.member_id && (
+                            {participant?.member_id && (
                                 <div className="flex items-center mb-2">
                                     <FiHash className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                                    <span className="text-gray-600 dark:text-gray-300">Member ID: {participant.member_id}</span>
+                                    <span className="text-gray-600 dark:text-gray-300">Member ID: {participant?.member_id}</span>
                                 </div>
                             )}
                         </div>
 
                         <div className="mt-2">
               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  participant.active
+                  participant?.active
                       ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
                       : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
               }`}>
-                {participant.active ? 'Active' : 'Inactive'}
+                {participant?.active ? 'Active' : 'Inactive'}
               </span>
                         </div>
                     </div>
@@ -68,7 +68,7 @@ export default function ParticipantShow({ participant }) {
                     <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
                         <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Raffle Entries</h3>
 
-                        {participant.entries && participant.entries.length > 0 ? (
+                        {participant?.entries && participant?.entries.length > 0 ? (
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead className="bg-gray-50 dark:bg-dark-light">
@@ -80,7 +80,7 @@ export default function ParticipantShow({ participant }) {
                                     </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-dark-paper divide-y divide-gray-200 dark:divide-gray-700">
-                                    {participant.entries.map((entry) => (
+                                    {participant?.entries.map((entry) => (
                                         <tr key={entry.id}>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm font-mono text-gray-900 dark:text-white">{entry.ticket_number}</div>
@@ -134,7 +134,7 @@ export default function ParticipantShow({ participant }) {
                             &larr; Back to Participants
                         </Link>
                         <Link
-                            href={route('participants.edit', participant.id)}
+                            href={route('participants.edit', participant?.id)}
                             className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
                         >
                             Edit Participant &rarr;

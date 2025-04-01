@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Raffle;
 use App\Models\Prize;
+use App\Models\Winner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
