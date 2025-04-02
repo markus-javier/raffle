@@ -16,15 +16,16 @@ export default function Dashboard({ cooperative, raffles, stats }) {
                         label: 'Create Raffle',
                         href: route('raffles.create'),
                         icon: <FiPlus />,
+                        variant: 'primary',
                     },
                 ]}
             />
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <Card className="bg-indigo-500 dark:bg-dark-primary text-white">
+                <Card className="bg-blue-500 dark:bg-dark-info text-white">
                     <div className="flex items-center">
-                        <div className="p-3 rounded-full bg-indigo-600 dark:bg-indigo-700 mr-4">
+                        <div className="p-3 rounded-full bg-blue-600 dark:bg-blue-700 mr-4">
                             <FiAward size={24} />
                         </div>
                         <div>
@@ -34,9 +35,9 @@ export default function Dashboard({ cooperative, raffles, stats }) {
                     </div>
                 </Card>
 
-                <Card className="bg-green-500 dark:bg-dark-success text-white">
+                <Card className="bg-blue-500 dark:bg-dark-info text-white">
                     <div className="flex items-center">
-                        <div className="p-3 rounded-full bg-green-600 dark:bg-teal-700 mr-4">
+                        <div className="p-3 rounded-full bg-blue-600 dark:bg-blue-700 mr-4">
                             <FiUsers size={24} />
                         </div>
                         <div>
@@ -58,9 +59,9 @@ export default function Dashboard({ cooperative, raffles, stats }) {
                     </div>
                 </Card>
 
-                <Card className="bg-purple-500 dark:bg-dark-accent text-white">
+                <Card className="bg-blue-500 dark:bg-dark-info text-white">
                     <div className="flex items-center">
-                        <div className="p-3 rounded-full bg-purple-600 dark:bg-purple-700 mr-4">
+                        <div className="p-3 rounded-full bg-blue-600 dark:bg-blue-700 mr-4">
                             <FiCalendar size={24} />
                         </div>
                         <div>
