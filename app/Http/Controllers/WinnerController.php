@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Winner;
 use Illuminate\Http\Request;
 
 class WinnerController extends Controller
@@ -60,5 +61,14 @@ class WinnerController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function markAsClaimed(string $id)
+    {
+        $winner = Winner::findOrFail($id);
+        $winner->is_claimed = true;
+        $winner->save();
+
+        return redirect()->back()->with('success', 'Prize marked as claimed!');
     }
 }

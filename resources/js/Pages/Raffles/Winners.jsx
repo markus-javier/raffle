@@ -1,6 +1,6 @@
 // resources/js/Pages/Raffles/Winners.jsx
 import React, { useState } from 'react';
-import { Link } from '@inertiajs/react';
+import {Link, useForm} from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 import Card from '@/Components/Card';
 import PageHeader from '@/Components/PageHeader';
@@ -9,9 +9,14 @@ import { FiChevronLeft, FiAward, FiGift, FiCheck, FiX } from 'react-icons/fi';
 export default function RaffleWinners({ raffle, winners }) {
     const [selectedWinner, setSelectedWinner] = useState(null);
 
+    const claimForm = useForm({});
+
     const markAsClaimed = (winnerId) => {
-        // Update winner claimed status
-        // This would trigger a form submission in a real app
+        claimForm.put(route('winners.claim', { winner: winnerId }), {
+            onSuccess: () => {
+                setSelectedWinner(null);
+            },
+        });
     };
 
     return (
@@ -126,10 +131,10 @@ export default function RaffleWinners({ raffle, winners }) {
                                     className="btn-primary"
                                     onClick={() => {
                                         markAsClaimed(selectedWinner.id);
-                                        setSelectedWinner(null);
                                     }}
+                                    disabled={claimForm.processing}
                                 >
-                                    Confirm
+                                    {claimForm.processing ? 'Processing...' : 'Confirm'}
                                 </button>
                             </div>
                         </div>
