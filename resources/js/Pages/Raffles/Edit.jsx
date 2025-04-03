@@ -212,7 +212,7 @@ export default function RaffleEdit({ raffle, prizes }) {
                             </p>
                             <Link
                                 href={route('raffles.draw', raffle.id)}
-                                method="post"
+                                method="get"
                                 as="button"
                                 className="btn-primary w-full"
                             >

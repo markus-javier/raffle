@@ -421,7 +421,7 @@ export default function RaffleShow({ raffle, prizes, stats }) {
                             </p>
                             <Link
                                 href={route('raffles.draw', raffle.id)}
-                                method="post"
+                                method="get"
                                 as="button"
                                 className="btn-primary w-full"
                             >

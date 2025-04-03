@@ -53,7 +53,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/raffles/{raffle}/edit', [RaffleController::class, 'edit'])->name('raffles.edit');
     Route::put('/raffles/{raffle}', [RaffleController::class, 'update'])->name('raffles.update');
     Route::delete('/raffles/{raffle}', [RaffleController::class, 'destroy'])->name('raffles.destroy');
-    Route::post('/raffles/{raffle}/draw', [RaffleController::class, 'draw'])->name('raffles.draw');
     Route::get('/raffles/{raffle}/winners', [RaffleController::class, 'winners'])->name('raffles.winners');
     Route::get('/raffles/{raffle}/entries', [RaffleEntryController::class, 'index'])->name('raffles.entries');
 
@@ -76,6 +75,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // Winners
     Route::put('/winners/{winner}/claim', [WinnerController::class, 'markAsClaimed'])->name('winners.claim');
+
+    // Raffle drawing routes
+    Route::get('/raffles/{raffle}/draw', [RaffleController::class, 'showDraw'])->name('raffles.draw');
+    Route::post('/raffles/{raffle}/save-winners', [RaffleController::class, 'saveWinners'])->name('raffles.saveWinners');
 
     // Raffle Entries
     Route::get('/raffles/{raffle}/entries', [RaffleEntryController::class, 'index'])->name('raffles.entries');
