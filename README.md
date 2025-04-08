@@ -1,66 +1,170 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Raffle Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A complete web application for organizations, businesses, non-profits, cooperatives, and communities to create, manage and run online raffles. Built with Laravel and React.
 
-## About Laravel
+## 🎯 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This system is versatile and can be used by various types of organizations including:
+- Businesses running promotional raffles
+- Non-profit organizations fundraising through raffles
+- Cooperatives organizing member-exclusive draws
+- Communities hosting social events
+- Schools and universities for campus events
+- Clubs and associations for member engagement
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The platform includes:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Multi-tenant system**: Each organization has its own isolated environment
+- **Raffle Management**: Create, edit, and manage multiple raffles
+- **Participant Management**: Track and manage raffle participants
+- **Prize Management**: Set up multiple prizes for each raffle
+- **Flexible Entry System**: Support for manual entry, CSV import, and online entry
+- **Interactive Draw System**: Live drawing interface with animation and visual effects
+- **Winner Management**: Track winners and prize claim status
+- **Public & Private Raffles**: Control access with access codes for private raffles
+- **Responsive Design**: Works on mobile, tablet, and desktop
 
-## Learning Laravel
+## 🚀 Technology Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Backend**: Laravel 10+
+- **Frontend**: React with Inertia.js
+- **Styling**: Tailwind CSS
+- **Database**: MySQL/PostgreSQL/SQLite
+- **Authentication**: Laravel Fortify
+- **UI Components**: Custom components with React Icons
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 📋 Requirements
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.1+
+- Node.js 16+
+- Composer
+- npm or yarn
+- MySQL, PostgreSQL, or SQLite
 
-## Laravel Sponsors
+## ⚙️ Installation
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/raffle-management-system.git
+   cd raffle-management-system
+   ```
 
-### Premium Partners
+2. Install PHP dependencies:
+   ```
+   composer install
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+3. Install NPM dependencies:
+   ```
+   npm install
+   ```
 
-## Contributing
+4. Create environment file:
+   ```
+   cp .env.example .env
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. Generate application key:
+   ```
+   php artisan key:generate
+   ```
 
-## Code of Conduct
+6. Configure your database in the `.env` file:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=raffle_system
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+7. Run migrations:
+   ```
+   php artisan migrate
+   ```
 
-## Security Vulnerabilities
+8. Create storage link:
+   ```
+   php artisan storage:link
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+9. Build frontend assets:
+   ```
+   npm run dev
+   ```
 
-## License
+10. Start the development server:
+    ```
+    php artisan serve
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Visit `http://localhost:8000` to access the application.
+
+## 🧑‍💻 Usage
+
+### Setting Up Your Organization
+
+After registration, you'll be prompted to set up your organization with:
+- Organization name
+- Description
+- Primary and secondary colors (for branding)
+
+### Managing Raffles
+
+1. **Create a Raffle**: Define title, description, date range, and entry limits
+2. **Add Prizes**: Create prizes with names, descriptions, images, and quantities
+3. **Gather Entries**: Add entries manually, import via CSV, or share the public entry link
+4. **Conduct the Draw**: Use the interactive draw interface to select winners
+5. **Manage Winners**: Track prize claims and communicate with winners
+
+## 📊 Data Model
+
+The system consists of the following primary models:
+
+- **User**: System user accounts
+- **Organization**: Entity running raffles (business, non-profit, cooperative, etc.)
+- **Raffle**: Individual raffle events
+- **Prize**: Prizes available in a raffle
+- **Participant**: Individuals entering raffles
+- **RaffleEntry**: Individual entries in a raffle
+- **Winner**: Records of prize winners
+
+## 🔒 Security
+
+- Private raffles are protected with access codes
+- All user data is validated and sanitized
+- CSRF protection for all forms
+- Authentication required for administrative functions
+- Input validation on all endpoints
+
+## 🛠 Configuration Options
+
+Various system behaviors can be configured through environment variables:
+
+- `APP_NAME`: Application title
+- `MAIL_*`: Email configuration for notifications
+- `DB_CONNECTION`: Database type (mysql, pgsql, sqlite)
+- `FILESYSTEM_DISK`: Storage system for images
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 📧 Contact
+
+For questions or support, please open an issue on this repository or contact the maintainers.
+
+---
+
+Made with ❤️ for organizations of all types
