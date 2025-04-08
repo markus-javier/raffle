@@ -5,7 +5,7 @@ import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout';
 import Card from '@/Components/Card';
 import PageHeader from '@/Components/PageHeader';
-import { FiChevronLeft, FiAward, FiGift, FiClock, FiPlay, FiPause, FiCheck, FiSave } from 'react-icons/fi';
+import { FiChevronLeft, FiAward, FiGift, FiClock, FiPlay, FiPause, FiCheck, FiSave, FiRefreshCw } from 'react-icons/fi';
 
 export default function RaffleDraw({ raffle, prizes, validEntriesCount, entries, existingWinners = [], currentPrizeIndex = 0, currentQuantityIndex = 0 }) {
     const [prizeIndex, setPrizeIndex] = useState(currentPrizeIndex);
@@ -165,6 +165,37 @@ export default function RaffleDraw({ raffle, prizes, validEntriesCount, entries,
                 setDrawingComplete(true);
             }
         }
+    };
+
+    // Allow redrawing the current prize winner
+    const redrawCurrentWinner = () => {
+        // Get the latest drawn winner
+        if (newWinners.length === 0) return;
+
+        // Remove the last winner from our list
+        const updatedWinners = [...newWinners];
+        const removedWinner = updatedWinners.pop();
+        setNewWinners(updatedWinners);
+
+        // Add the entry back to available entries
+        if (removedWinner.raffle_entry) {
+            setAvailableEntries(prev => [...prev, removedWinner.raffle_entry]);
+        }
+
+        // Go back one step in the drawing process
+        if (quantityIndex > 0) {
+            setQuantityIndex(quantityIndex - 1);
+        } else if (prizeIndex > 0) {
+            const previousPrize = prizes[prizeIndex - 1];
+            setPrizeIndex(prizeIndex - 1);
+            setQuantityIndex(previousPrize.quantity - 1);
+        }
+
+        // Reset the current entry
+        setCurrentEntry(null);
+
+        // Reset drawing status
+        setDrawingComplete(false);
     };
 
     // Save current winners to the database
@@ -397,7 +428,7 @@ export default function RaffleDraw({ raffle, prizes, validEntriesCount, entries,
                 <div className="lg:col-span-1">
                     <Card className="h-full">
                         <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-                            Next Drawing Prize
+                            Drawing Prize
                         </h2>
 
                         {currentPrize && !drawingComplete ? (
@@ -524,15 +555,24 @@ export default function RaffleDraw({ raffle, prizes, validEntriesCount, entries,
                                         </button>
 
                                         {newWinners.length > 0 && !isDrawing && (
-                                            <button
-                                                className={`px-6 py-3 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium flex items-center ${
-                                                    saveStatus === 'saving' ? 'opacity-75' : ''
-                                                }`}
-                                                onClick={saveCurrentWinners}
-                                                disabled={saveStatus === 'saving'}
-                                            >
-                                                <FiSave className="mr-2" /> Save Audited Winner
-                                            </button>
+                                            <>
+                                                <button
+                                                    className="px-6 py-3 rounded-md bg-red-600 hover:bg-red-700 text-white font-medium flex items-center"
+                                                    onClick={redrawCurrentWinner}
+                                                    disabled={saveStatus === 'saving'}
+                                                >
+                                                    <FiRefreshCw className="mr-2" /> Redraw
+                                                </button>
+                                                <button
+                                                    className={`px-6 py-3 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium flex items-center ${
+                                                        saveStatus === 'saving' ? 'opacity-75' : ''
+                                                    }`}
+                                                    onClick={saveCurrentWinners}
+                                                    disabled={saveStatus === 'saving'}
+                                                >
+                                                    <FiSave className="mr-2" /> Save Progress
+                                                </button>
+                                            </>
                                         )}
                                     </>
                                 )}
@@ -564,17 +604,26 @@ export default function RaffleDraw({ raffle, prizes, validEntriesCount, entries,
                         Drawn Winners {allWinners.length > 0 && `(${allWinners.length})`}
                     </h2>
 
-                    {/* Save progress button in header */}
+                    {/* Header action buttons */}
                     {newWinners.length > 0 && (
-                        <button
-                            className={`px-3 py-1 text-sm rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium flex items-center ${
-                                saveStatus === 'saving' ? 'opacity-75' : ''
-                            }`}
-                            onClick={saveCurrentWinners}
-                            disabled={saveStatus === 'saving'}
-                        >
-                            <FiSave className="mr-1" /> Save Winners
-                        </button>
+                        <div className="flex space-x-2">
+                            <button
+                                className="px-3 py-1 text-sm rounded-md bg-red-600 hover:bg-red-700 text-white font-medium flex items-center"
+                                onClick={redrawCurrentWinner}
+                                disabled={saveStatus === 'saving'}
+                            >
+                                <FiRefreshCw className="mr-1" /> Redraw
+                            </button>
+                            <button
+                                className={`px-3 py-1 text-sm rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium flex items-center ${
+                                    saveStatus === 'saving' ? 'opacity-75' : ''
+                                }`}
+                                onClick={saveCurrentWinners}
+                                disabled={saveStatus === 'saving'}
+                            >
+                                <FiSave className="mr-1" /> Save Winners
+                            </button>
+                        </div>
                     )}
                 </div>
 
