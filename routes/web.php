@@ -88,4 +88,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/raffles/{raffle}/entries/import', [RaffleEntryController::class, 'importProcess'])->name('raffles.entries.import.process');
     Route::put('/entries/{entry}/invalidate', [RaffleEntryController::class, 'invalidate'])->name('entries.invalidate');
     Route::put('/entries/{entry}/validate', [RaffleEntryController::class, 'validate'])->name('entries.validate');
+    // Add this new route for partial winners saving
+    Route::post('/raffles/{raffle}/save-partial-winners', [RaffleController::class, 'savePartialWinners'])
+        ->name('raffles.savePartialWinners')
+        ->middleware(['auth']);
+
 });

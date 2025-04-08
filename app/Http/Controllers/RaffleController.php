@@ -222,10 +222,14 @@ class RaffleController extends Controller
             return redirect()->back()->with('error', 'Raffle is not ready for drawing.');
         }
 
-        // Check if winners already exist
-        if ($raffle->winners()->count() > 0) {
+        // Load existing winners
+        $existingWinners = $raffle->winners()->with(['prize', 'raffleEntry'])->get();
+
+        // Check if all prizes have been drawn
+        $totalPrizeQuantity = $raffle->prizes()->sum('quantity');
+        if ($existingWinners->count() >= $totalPrizeQuantity) {
             return redirect()->route('raffles.winners', $raffle->id)
-                             ->with('info', 'This raffle has already been drawn.');
+                             ->with('info', 'All prizes for this raffle have already been drawn.');
         }
 
         // Get all prizes with their details
@@ -234,7 +238,12 @@ class RaffleController extends Controller
         // Count valid entries
         $validEntriesCount = $raffle->entries()->where('is_valid', true)->count();
 
-        $entries = $raffle->entries()->get();
+        // Get all entries, excluding those that have already won
+        $drawnEntryIds = $existingWinners->pluck('raffle_entry_id')->toArray();
+        $entries = $raffle->entries()
+                          ->whereNotIn('id', $drawnEntryIds)
+                          ->where('is_valid', true)
+                          ->get();
 
         if ($validEntriesCount === 0) {
             return redirect()->back()->with('error', 'No valid entries for this raffle.');
@@ -244,16 +253,124 @@ class RaffleController extends Controller
             return redirect()->back()->with('error', 'No prizes defined for this raffle.');
         }
 
+        // Calculate current position in the draw process
+        $currentPrizeIndex = 0;
+        $currentQuantityIndex = 0;
+        $prizeProgressMap = [];
+
+        // Create a map of drawn prizes and quantities
+        foreach ($existingWinners as $winner) {
+            $prizeId = $winner->prize_id;
+            if (!isset($prizeProgressMap[$prizeId])) {
+                $prizeProgressMap[$prizeId] = 0;
+            }
+            $prizeProgressMap[$prizeId]++;
+        }
+
+        // Determine the current prize and quantity indices
+        $drawnCount = 0;
+        foreach ($prizes as $index => $prize) {
+            $drawnForThisPrize = $prizeProgressMap[$prize->id] ?? 0;
+
+            if ($drawnForThisPrize < $prize->quantity) {
+                $currentPrizeIndex = $index;
+                $currentQuantityIndex = $drawnForThisPrize;
+                break;
+            }
+
+            $drawnCount += $drawnForThisPrize;
+        }
+
         return Inertia::render('Raffles/Draw', [
             'raffle' => $raffle,
             'prizes' => $prizes,
             'validEntriesCount' => $validEntriesCount,
             'entries' => $entries,
+            'existingWinners' => $existingWinners,
+            'currentPrizeIndex' => $currentPrizeIndex,
+            'currentQuantityIndex' => $currentQuantityIndex,
         ]);
     }
 
     /**
-     * Save the winners from the draw.
+     * Save winners without completing the raffle.
+     * This function saves individual winners during the drawing process.
+     */
+    public function savePartialWinners(Request $request, Raffle $raffle)
+    {
+        // Authorize access
+        // $this->authorize('update', $raffle);
+
+        // Validate input
+        $validated = $request->validate([
+            'winners' => 'required|array',
+            'winners.*.prize_id' => 'required|exists:prizes,id',
+            'winners.*.raffle_entry_id' => 'required|exists:raffle_entries,id',
+            'winners.*.drawn_at' => 'required|date',
+        ]);
+
+        // Get all existing winners
+        $existingWinnerEntryIds = $raffle->winners()->pluck('raffle_entry_id')->toArray();
+
+        // Get all valid entries
+        $validEntries = $raffle->entries()->where('is_valid', true)->get();
+
+        // Track used entries to prevent duplicates
+        $usedEntryIds = $existingWinnerEntryIds;
+        $newWinnersCount = 0;
+
+        // Create winner records for new winners only
+        foreach ($validated['winners'] as $winnerData) {
+            // Skip if this entry is already a winner (either in DB or in this batch)
+            if (in_array($winnerData['raffle_entry_id'], $usedEntryIds)) {
+                continue;
+            }
+
+            // Get the raffle entry
+            $entry = $validEntries->firstWhere('id', $winnerData['raffle_entry_id']);
+
+            if (!$entry) {
+                continue; // Skip if entry not found or not valid
+            }
+
+            // Create winner record
+            $winner = new Winner([
+                'raffle_id' => $raffle->id,
+                'prize_id' => $winnerData['prize_id'],
+                'raffle_entry_id' => $entry->id,
+                'participant_id' => $entry->participant_id,
+                'drawn_at' => $winnerData['drawn_at'],
+                'is_claimed' => false,
+            ]);
+
+            $winner->save();
+            $newWinnersCount++;
+
+            // Mark entry as used
+            $usedEntryIds[] = $entry->id;
+        }
+
+        // Check if all prizes have been drawn
+        $totalPrizeQuantity = $raffle->prizes()->sum('quantity');
+        $totalWinnersCount = count($usedEntryIds);
+
+        // Only set status to completed if all prizes have been drawn
+        if ($totalWinnersCount >= $totalPrizeQuantity) {
+            $raffle->update(['status' => 'completed']);
+        }
+
+        // Return a success response without redirecting
+        return response()->json([
+            'status' => 'success',
+            'message' => $newWinnersCount . ' winner(s) saved successfully',
+            'winners_saved' => $newWinnersCount,
+            'total_winners' => $totalWinnersCount,
+            'is_completed' => $totalWinnersCount >= $totalPrizeQuantity
+        ]);
+    }
+
+    /**
+     * Save the winners from the draw and complete the raffle.
      */
     public function saveWinners(Request $request, Raffle $raffle)
     {
@@ -268,28 +385,30 @@ class RaffleController extends Controller
             'winners.*.drawn_at' => 'required|date',
         ]);
 
-        // Check if the raffle already has winners
-        if ($raffle->winners()->count() > 0) {
-            return redirect()->route('raffles.winners', $raffle->id)
-                             ->with('error', 'This raffle has already been drawn.');
-        }
+        // Get existing winners
+        $existingWinnerEntryIds = $raffle->winners()->pluck('raffle_entry_id')->toArray();
 
         // Get all valid entries
         $validEntries = $raffle->entries()->where('is_valid', true)->get();
 
-        // Make sure we have enough valid entries
-        if ($validEntries->count() < count($validated['winners'])) {
+        // Make sure we have enough valid entries for remaining prizes
+        $remainingPrizes = $raffle->prizes()->sum('quantity') - count($existingWinnerEntryIds);
+        $newWinnersCount = count(array_filter($validated['winners'], function($winner) use ($existingWinnerEntryIds) {
+            return !in_array($winner['raffle_entry_id'], $existingWinnerEntryIds);
+        }));
+
+        if ($validEntries->count() < $remainingPrizes) {
             return redirect()->back()->with('error', 'Not enough valid entries to draw all prizes.');
         }
 
         // Track used entries to prevent duplicates
-        $usedEntryIds = [];
+        $usedEntryIds = $existingWinnerEntryIds;
 
-        // Create winner records
+        // Create winner records for new winners only
         foreach ($validated['winners'] as $winnerData) {
-            // Check if entry has already been used
+            // Skip if this entry is already a winner
             if (in_array($winnerData['raffle_entry_id'], $usedEntryIds)) {
-                continue; // Skip duplicate entries
+                continue;
             }
 
             // Get the raffle entry
@@ -322,4 +441,3 @@ class RaffleController extends Controller
                          ->with('success', 'Raffle draw completed successfully.');
     }
 }
-
